@@ -24,16 +24,26 @@ def make_client(url : URI, region = nil)
   client.read_timeout = 15.seconds
   client.connect_timeout = 15.seconds
 
-  if region
-    PROXY_LIST[region]?.try &.sample(40).each do |proxy|
-      begin
-        proxy = HTTPProxy.new(proxy_host: proxy[:ip], proxy_port: proxy[:port])
-        client.set_proxy(proxy)
-        break
-      rescue ex
-      end
-    end
+  #Setting proxy options to client
+  if CONFIG.proxy_host && CONFIG.proxy_port && CONFIG.proxy_user && CONFIG.proxy_password
+    options               =   {} of Symbol => String
+    options[:user]        =   CONFIG.proxy_user
+    options[:password]    =   CONFIG.proxy_password
+    config_proxy_host = CONFIG.proxy_host
+    config_proxy_port = CONFIG.proxy_port
+    proxy = HTTPProxy.new(proxy_host: config_proxy_host, proxy_port: config_proxy_port, options: options)
+    client.set_proxy(proxy)
   end
+#  if region
+#    PROXY_LIST[region]?.try &.sample(40).each do |proxy|
+#      begin
+#        proxy = HTTPProxy.new(proxy_host: proxy[:ip], proxy_port: proxy[:port])
+#        client.set_proxy(proxy)
+#        break
+#      rescue ex
+#      end
+#    end
+#  end
 
   return client
 end

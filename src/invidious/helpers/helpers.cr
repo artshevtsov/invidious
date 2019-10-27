@@ -237,6 +237,10 @@ struct Config
     force_resolve:     {type: Socket::Family, default: Socket::Family::UNSPEC, converter: FamilyConverter}, # Connect to YouTube over 'ipv6', 'ipv4'. Will sometimes resolve fix issues with rate-limiting (see https://github.com/ytdl-org/youtube-dl/issues/21729)
     port:              {type: Int32, default: 3000},                                                        # Port to listen for connections (overrided by command line argument)
     host_binding:      {type: String, default: "0.0.0.0"},                                                  # Host to bind (overrided by command line argument)
+    proxy_host:        {type: String, default: ""},
+    proxy_port:        {type: Int32, default: 3128},
+    proxy_user:        {type: String, default: ""}, #client proxy user
+    proxy_password:    {type: String, default: ""}, #client proxy password
   })
 end
 
