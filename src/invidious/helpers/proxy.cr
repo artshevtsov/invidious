@@ -77,6 +77,10 @@ class HTTPClient < HTTP::Client
     end
   end
 
+  def unset_proxy
+    @socket = nil
+  end
+
   def proxy_connection_options
     opts = {} of Symbol => Float64 | Nil
 
@@ -88,7 +92,12 @@ class HTTPClient < HTTP::Client
   end
 
   def exec(request)
-    request.headers["User-Agent"] = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36"
+    if self.host == "www.youtube.com"
+      request.headers["x-youtube-client-name"] ||= "1"
+      request.headers["x-youtube-client-version"] ||= "1.20180719"
+      request.headers["user-agent"] ||= "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/77.0.3865.90 Safari/537.36"
+    end
+
     super
   end
 end
